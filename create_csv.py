@@ -47,3 +47,6 @@ df = pd.DataFrame(data_dict)
 # Drop duplicates
 df.drop_duplicates(subset="id", keep="first", inplace=True)
 df.to_csv("valence_arousal_dataset_tomer2.csv", index=False)
+
+# Create mood vector and add it to the existing dataframe
+df["mood_vec"] = df["valence", "energy"].values.tolist()
