@@ -1,0 +1,19 @@
+{
+  "choices": [
+    {
+      "finish_reason": "length",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nBumps and bruises by Echosmith\n\nsad,"
+    }
+  ],
+  "created": 1661264254,
+  "id": "cmpl-5iP0go5wjYQ2McwHUDphSObE2q30i",
+  "model": "text-davinci-002",
+  "object": "text_completion",
+  "usage": {
+    "completion_tokens": 16,
+    "prompt_tokens": 46,
+    "total_tokens": 62
+  }
+}
