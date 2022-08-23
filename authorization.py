@@ -1,9 +1,10 @@
 import tekore as tk
+from dotenv import load_dotenv
+import os
 
-# TODO: Use .env files to change secrets between us
-
-CLIENT_ID = '325ccd6336b34b64ab5953f2ccb224fa'
-CLIENT_SECRET = '7579dbb156f9431c8a2dd7d0ef9b8113'
+load_dotenv()
+CLIENT_ID = os.getenv('CLIENT_ID')
+CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 
 def authorize():
     app_token = tk.request_client_token(CLIENT_ID, CLIENT_SECRET)
