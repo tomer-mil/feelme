@@ -1,0 +1,1 @@
+{"id": "cmpl-5j7gzbSD0S7hIeulFstHiZEGLf9p5", "object": "text_completion", "created": 1661436013, "model": "text-davinci-002", "choices": [{"text": "\n\n\"Bumps\" by A Tribe Called Quest | frustration, disappointment, worry, exhaustion", "index": 0, "logprobs": null, "finish_reason": "stop"}], "usage": {"prompt_tokens": 47, "completion_tokens": 19, "total_tokens": 66}}

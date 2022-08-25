@@ -30,7 +30,7 @@ def generate_prompt(text: str):
     return prompt
 
 
-def get_OpenAI_analysis(query="", is_example_response=True, create_new_example=True):  # TODO: don't forget to turn off the example response
+def get_OpenAI_analysis(query="", is_example_response=True, create_new_example=False):  # TODO: don't forget to turn off the example response
     """
     The get_OpenAI_analysis function takes a query and returns a response from the OpenAI model.
     The function takes in a user's query, and uses the OpenAI API to generate an analysis of that string which contains
@@ -49,11 +49,16 @@ def get_OpenAI_analysis(query="", is_example_response=True, create_new_example=T
             top_p=config["top_p"],
             max_tokens=config["max_tokens"]
         )
+
+        print(f"OpenAI Response: {response}")
+
         if create_new_example:  # Used only when a new example is desired
-            with open(f"{EXAMPLE_PATH}/OpenAI_reponse_dict.txt", 'x') as response_file:
+            with open(f"{EXAMPLE_PATH}/OpenAI_response_dict.txt", 'x') as response_file:
                 response_file.write(json.dumps(response))
 
-    with open(f"{EXAMPLE_PATH}/OpenAI_reponse_dict.txt", "r") as example_json:  # loads the example response locally
+        return response
+
+    with open(f"{EXAMPLE_PATH}/OpenAI_response_dict.txt", "r") as example_json:  # loads the example response locally
         response = json.load(example_json)
 
     return response
@@ -106,7 +111,7 @@ def parse_OpenAI_response(response) -> dict:
     The function first fetches the relevant text from the response, and then splits the text of the response by the
     constant seperator. The function then extracts these values using extract methods and returns them as a dictionary.
 
-    :param response: An OpenAI response in a JSON foramt
+    :param response: An OpenAI response in a JSON format
     :return: A dictionary containing the song title, artist, and sentiment values
     """
 
@@ -120,7 +125,3 @@ def parse_OpenAI_response(response) -> dict:
 
 
 ###############
-
-
-analysis = get_OpenAI_analysis(EXAMPLE_QUERY)
-print(parse_OpenAI_response(analysis))
