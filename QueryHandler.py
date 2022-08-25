@@ -6,6 +6,8 @@ from OpenAIConfig import config
 
 load_dotenv()
 openai.api_key = os.getenv('OPENAI_API_KEY')
+EXAMPLE_PATH = "/Users/tomermildworth/Desktop/Coding/FeelMe/feelme"
+EXAMPLE_QUERY = "I just failed my last test and i dont know how things are going to turn out. im bumped and have zero energy"
 
 
 def generate_prompt(text: str):
@@ -16,12 +18,11 @@ def generate_prompt(text: str):
     :param text:str: User's text (story) that will be used to generate a query
     :return: A string, which is the query that we want to send to OpenAI's api
     """
-    prompt = f"find a song that represents the emotions coming from this text: \"{text}\"," \
-             f"song title, artist | list of emotions"
+    prompt = f"find a song that represents the emotions coming from this text: \"{text}\"\nsong title, artist | list of emotions"
     return prompt
 
 
-def get_OpenAI_analysis(query: str):
+def get_OpenAI_analysis(query="", is_example_response=True):  # TODO: don't forget to turn off the example response
     """
     The get_OpenAI_analysis function takes a query and returns a response from the OpenAI model.
     The function takes in a user's query, and uses the OpenAI API to generate an analysis of that string which contains
@@ -32,25 +33,45 @@ def get_OpenAI_analysis(query: str):
     :doc-author: Trelent
     """
 
-    response = openai.Completion.create(
-        model=config["model"],
-        prompt=generate_prompt(query),
-        temperature=config["temp"],
-        top_p=config["top_p"],
-        length=config["length"]
-    )
+    if not is_example_response:
+        response = openai.Completion.create(
+            model=config["model"],
+            prompt=generate_prompt(query),
+            temperature=config["temp"],
+            top_p=config["top_p"],
+            max_tokens=config["max_tokens"]
+        )
+
+        with open(f"{EXAMPLE_PATH}/OpenAI_reponse_dict.txt", 'x') as response_file:
+            response_file.write(json.dumps(response))
+
+    with open(f"{EXAMPLE_PATH}/OpenAI_reponse_dict.txt", "r") as example_json:
+        response = json.load(example_json)
 
     return response
-#
-# def parse_OpenAI_response(response):
-#     json.dump(response)
 
 
-# analysis = get_OpenAI_analysis("I just failed my last test and i dont know how things are going to turn out. im bumped and have zero energy")
+def extract_song_info(text: str):
+    text_list = text.split("by")
+
+    for i, info in enumerate(text_list):
+        text_list[i] = info.strip().strip('"')
+
+    return text_list[0], text_list[1]
 
 
-# print(analysis)
+def extract_sentiments(text: str):
+    return text.split(', ')
+
+
+def parse_OpenAI_response(response):
+    total_text = response["choices"][0]["text"].split("|")
+    song_info = extract_song_info(total_text[0].strip())
+    song_sentiments = extract_sentiments(total_text[1].strip())
+    return song_info, song_sentiments
 
 
 
 
+analysis = get_OpenAI_analysis(EXAMPLE_QUERY)
+parse_OpenAI_response(analysis)
