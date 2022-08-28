@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 import openai
 from OpenAIConfig import config
 
-
 # CONSTANTS
 load_dotenv()
 openai.api_key = os.getenv('OPENAI_API_KEY')
@@ -160,4 +159,3 @@ def query_analysis(query: str):
     """
     openAI_response = get_OpenAI_analysis(query=query)
     return parse_OpenAI_response(openAI_response)
-
