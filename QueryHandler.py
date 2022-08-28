@@ -134,28 +134,22 @@ def parse_OpenAI_response(response) -> dict:
     """
 
     total_text = response["choices"][0]["text"].split(RESPONSE_SEPERATOR)
-
+    mooditem_dict = {}
     song_info = extract_song_title_and_artist(total_text[0].strip())  # title and artist
     prompt_sentiments = extract_sentiments(total_text[1].strip())  # sentiments
     prompt_keywords = extract_keywords(total_text[2].strip().strip('"'))  # keywords
 
-    song_info.update(prompt_sentiments)
-    song_info.update(prompt_keywords)
+    mooditem_dict.update(song_info)
+    mooditem_dict.update(prompt_sentiments)
+    mooditem_dict.update(prompt_keywords)
 
-    return song_info
+    return mooditem_dict
 
 
 ###############
 
 
 ### Main Method ###
-def query_analysis(query: str):
-    """
-    The query_analysis function takes a string which is the user's mood (or story) description and returns a dictionary
-    with the prompt analysis and song information.
-
-    :param query:str: An input query provided by the user
-    :return: A dictionary with prompt information (keywords and sentiment analysis) and song information (title and artist);
-    """
+def query_to_mooditem_dict(query: str) -> dict:
     openAI_response = get_OpenAI_analysis(query=query)
     return parse_OpenAI_response(openAI_response)
