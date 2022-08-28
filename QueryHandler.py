@@ -3,7 +3,7 @@ import json
 from dotenv import load_dotenv
 import openai
 from OpenAIConfig import config
-
+from Song import Song
 
 # CONSTANTS
 load_dotenv()
@@ -24,13 +24,12 @@ def generate_prompt(text: str):
 
     :param text:str: Store the user's text (story) that will be used to generate a query
     :return: A string that will be used as a query for the openai server
-    :doc-author: Trelent
     """
     prompt = f"find a song that represents the emotions coming from this text: \"{text}\"\nsong title, artist | list of emotions"
     return prompt
 
 
-def get_OpenAI_analysis(query="", is_example_response=True, create_new_example=False):  # TODO: don't forget to turn off the example response
+def get_OpenAI_analysis(query="", is_example_response=False, create_new_example=False):  # TODO: don't forget to turn off the example response
     """
     The get_OpenAI_analysis function takes a query and returns a response from the OpenAI model.
     The function takes in a user's query, and uses the OpenAI API to generate an analysis of that string which contains
@@ -125,3 +124,4 @@ def parse_OpenAI_response(response) -> dict:
 
 
 ###############
+
