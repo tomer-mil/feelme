@@ -26,7 +26,7 @@ def generate_prompt(text: str):
     :return: A string that will be used as a query for the openai server
     :doc-author: Trelent
     """
-    prompt = f"find a song that represents the emotions coming from this text: \"{text}\"\nsong title, artist | list of emotions"
+    prompt = f"find a song that represents the emotions coming from this text: \"{text}\"\nsong title, artist | list of emotions | 2 keywords from text"
     return prompt
 
 
@@ -66,9 +66,9 @@ def get_OpenAI_analysis(query="", is_example_response=True, create_new_example=F
 ###############
 
 
-def extract_song_info(response_text: str) -> dict:
+def extract_song_title_and_artist(response_text: str) -> dict:
     """
-    The extract_song_info function takes a string as an argument and returns a dictionary containing the song title
+    The extract_song_title_and_artist function takes a string as an argument and returns a dictionary containing the song title
     and artist. The function splits the string and then strips whitespace from both ends of each substring before
     returning the dictionary.
 
@@ -99,29 +99,65 @@ def extract_sentiments(response_sentiments_text: str) -> dict:
     :param response_sentiments_text:str: Store the sentiments from the response of the api call
     :return: A dictionary with a list of strings as the value for the key "sentiments";
     """
-    song_sentiments = {
+    prompt_sentiments = {
         "sentiments": response_sentiments_text.split(', ')
     }
-    return song_sentiments
+    return prompt_sentiments
+
+
+def extract_keywords(response_keywords_text: str) -> dict:
+    """
+    The extract_keywords function takes a string of keywords from the API response and returns a dictionary
+    containing the list of keywords. The function strips any leading or trailing whitespace, removes any commas,
+    and removes double quotes.
+
+    :param response_keywords_text:str: Pass the text that is returned from the OpenAI api call
+    :return: A dictionary with a single key:value pair, where the value is a list of keywords
+    """
+    keywords_list = response_keywords_text.split(" ")
+    for i, keyword in enumerate(keywords_list):  # reminder: .strip() method is NOT in-place
+        keywords_list[i] = keyword.strip(',').strip('"')
+    prompt_keywords = {
+        "keywords": keywords_list
+    }
+    return prompt_keywords
 
 
 def parse_OpenAI_response(response) -> dict:
     """
     The parse_OpenAI_response function takes in a response from the OpenAI API and parses it into a dictionary.
-    The function first fetches the relevant text from the response, and then splits the text of the response by the
-    constant seperator. The function then extracts these values using extract methods and returns them as a dictionary.
+    The function first fetches the relevant text from the response, and then splits the text of the response by
+    the constant seperator. The function then extracts these values using extract methods and returns them as a dictionary.
 
-    :param response: An OpenAI response in a JSON format
-    :return: A dictionary containing the song title, artist, and sentiment values
+    :param response: Pass in the response from the api
+    :return: A dictionary with the following keys:
+    :doc-author: Trelent
     """
 
     total_text = response["choices"][0]["text"].split(RESPONSE_SEPERATOR)
 
-    song_info = extract_song_info(total_text[0].strip())  # title and artist
-    song_sentiments = extract_sentiments(total_text[1].strip())  # sentiments
-    song_info.update(song_sentiments)
+    song_info = extract_song_title_and_artist(total_text[0].strip())  # title and artist
+    prompt_sentiments = extract_sentiments(total_text[1].strip())  # sentiments
+    prompt_keywords = extract_keywords(total_text[2].strip().strip('"'))  # keywords
+
+    song_info.update(prompt_sentiments)
+    song_info.update(prompt_keywords)
 
     return song_info
 
 
 ###############
+
+
+### Main Method ###
+def query_analysis(query: str):
+    """
+    The query_analysis function takes a string which is the user's mood (or story) description and returns a dictionary
+    with the prompt analysis and song information.
+
+    :param query:str: An input query provided by the user
+    :return: A dictionary with prompt information (keywords and sentiment analysis) and song information (title and artist);
+    """
+    openAI_response = get_OpenAI_analysis(query=query)
+    return parse_OpenAI_response(openAI_response)
+
