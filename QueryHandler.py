@@ -3,6 +3,7 @@ import json
 from dotenv import load_dotenv
 import openai
 from OpenAIConfig import config
+import SongAnalysis
 
 # CONSTANTS
 load_dotenv()
@@ -153,3 +154,11 @@ def parse_OpenAI_response(response) -> dict:
 def query_to_mooditem_dict(query: str) -> dict:
     openAI_response = get_OpenAI_analysis(query=query)
     return parse_OpenAI_response(openAI_response)
+
+
+################
+# EXAMPLE RUNS #
+################
+
+# parsed_query = query_to_mooditem_dict(EXAMPLE_QUERY)
+# my_song = SongAnalysis.create_song(title=parsed_query["title"], artist=parsed_query["artist"])
