@@ -1,9 +1,9 @@
 import time
 import pandas as pd
 from tqdm import tqdm
-import authorization
+from authorization import auth_sp
 
-sp = authorization.authorize()
+sp = auth_sp
 
 genres = sp.recommendation_genre_seeds()
 
