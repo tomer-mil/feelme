@@ -160,5 +160,6 @@ def query_to_mooditem_dict(query: str) -> dict:
 # EXAMPLE RUNS #
 ################
 
-# parsed_query = query_to_mooditem_dict(EXAMPLE_QUERY)
-# my_song = SongAnalysis.create_song(title=parsed_query["title"], artist=parsed_query["artist"])
+parsed_query = query_to_mooditem_dict(EXAMPLE_QUERY)
+my_song = SongAnalysis.create_song(title=parsed_query["title"], artist=parsed_query["artist"])
+print(my_song)

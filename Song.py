@@ -5,7 +5,6 @@ class Song:
     href: str
     title: str
     artist: str
-    spotify_url: str
     energy: int
     valence: int
 
@@ -27,9 +26,6 @@ class Song:
     def __repr__(self):
         return f"<title: {self.title} | by: {self.artist} | ID: {self.spotify_ID}>"
 
-    def set_spotify_info(self, url: str, id: str):
-        self.spotify_ID = id
-        self.spotify_url = url
 
 
 
