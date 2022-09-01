@@ -1,6 +1,6 @@
 import tekore as tk
 from flask import Flask, request, redirect, session
-from dotenv import find_dotenv
+from dotenv import find_dotenv, set_key
 
 # https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
 
@@ -13,27 +13,28 @@ out_link = '<a href="/logout">logout</a>'
 login_msg = f'You can {in_link} or {out_link}'
 
 SCOPES = [tk.scope.user_top_read]
-
-conf = tk.config_from_file(find_dotenv(), "Spotify")  # Get required configuration from .env file
-cred = tk.Credentials(*conf)  # Client with configuration used to authorize a user
-spotify = tk.Spotify()
+ENV_PATH = find_dotenv()
+USER_REFRESH_TOKEN_KEY = "USER_REFRESH_TOKEN"
 
 ###############################
 
 auths = {}  # Ongoing authorisations: state -> UserAuth
-users = {}  # User tokens: state -> token (use state as a user ID)
+users = {}  # User tokens: state -> token (use state as a user ID) = False
 
 ###############################
 
 
 def app_factory() -> Flask:
+
+    conf = tk.config_from_file(ENV_PATH, "SPOTIFY")  # Get required configuration from .env file
+    cred = tk.Credentials(*conf)  # Client with configuration used to authorize a user
+    spotify = tk.Spotify()
+
     app = Flask(__name__)  # Creates the Flask server
     app.config['SECRET_KEY'] = 'aliens'  # Set SECRET_KEY in order to use flask's session https://flask.palletsprojects.com/en/2.2.x/api/#flask.session
 
     @app.route('/', methods=['GET'])  # When the URL goes to main page
     def main():
-
-        print(f"auths: {auths} \nusers: {users}")
 
         # Checks if a user is already logged in with valid token
         user = session.get('user', None)
@@ -91,6 +92,9 @@ def app_factory() -> Flask:
         token = auth.request_token(code, state)  # Verify state consistency and request token using current user's UserAuth object. https://tekore.readthedocs.io/en/stable/reference/auth.html#tekore.UserAuth.request_token
         session['user'] = state  # Set new 'state' for user in session
         users[state] = token  # Set new token and Refresh_Token for current user
+
+        add_refresh_to_env(state=state)  # Add Refresh_Token to .env file
+
         return redirect('/', 307)  # Redirect back to main
 
     @app.route('/logout', methods=['GET'])
@@ -103,23 +107,11 @@ def app_factory() -> Flask:
     return app
 
 
-# TODO: Make sure that "sessions" is the correct dict to fetch user's info WHEN MULTIPLE USERS ARE LOGGED IN (via ngrok)
-
-def get_user_token() -> tk.Token:
-    user = session.get('user', None)
-    if user is None:
-        raise ValueError("User not found")
-
-    return users.get(user)
-
-
-def get_user_id() -> str:
-    user_id = session.get('user', None)
-    if user_id is None:
-        raise ValueError("User not found")
-    return user_id
+def add_refresh_to_env(state: str):
+    refresh_token = users.get(state).refresh_token
+    set_key(ENV_PATH, USER_REFRESH_TOKEN_KEY, refresh_token)
 
 
 if __name__ == '__main__':
-    application = app_factory()
-    application.run('localhost', 8888)
+    app = app_factory()
+    app.run(host='localhost', port=8888)
