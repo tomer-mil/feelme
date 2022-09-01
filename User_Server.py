@@ -1,6 +1,6 @@
 import tekore as tk
-
 from flask import Flask, request, redirect, session
+from dotenv import find_dotenv
 
 # https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
 
@@ -14,8 +14,7 @@ login_msg = f'You can {in_link} or {out_link}'
 
 SCOPES = [tk.scope.user_top_read]
 
-
-conf = tk.config_from_file("/Users/tomermildworth/Desktop/Coding/FeelMe/feelme/.env", "Spotify")  # Get required configuration from .env file
+conf = tk.config_from_file(find_dotenv(), "Spotify")  # Get required configuration from .env file
 cred = tk.Credentials(*conf)  # Client with configuration used to authorize a user
 spotify = tk.Spotify()
 
@@ -103,8 +102,8 @@ def app_factory() -> Flask:
 
     return app
 
-# TODO: Make sure that "sessions" is the correct dict to fetch user's info WHEN MULTIPLE USERS ARE LOGGED IN (via ngrok)
 
+# TODO: Make sure that "sessions" is the correct dict to fetch user's info WHEN MULTIPLE USERS ARE LOGGED IN (via ngrok)
 
 def get_user_token() -> tk.Token:
     user = session.get('user', None)
@@ -118,6 +117,7 @@ def get_user_id() -> str:
     user_id = session.get('user', None)
     if user_id is None:
         raise ValueError("User not found")
+    return user_id
 
 
 if __name__ == '__main__':
