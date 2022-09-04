@@ -5,7 +5,10 @@ import openai
 from OpenAIConfig import config
 import SongAnalysis
 
-# CONSTANTS
+#############
+# CONSTANTS #
+#############
+
 load_dotenv()
 openai.api_key = os.getenv('OPENAI_API_KEY')
 EXAMPLE_PATH = "/Users/tomermildworth/Desktop/Coding/FeelMe/feelme"
