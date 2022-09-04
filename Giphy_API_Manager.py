@@ -37,7 +37,7 @@ def set_giphy_search_url(query: str) -> str:
     return SEARCH_URL + api_call_url
 
 
-def search_gif(request_url: str):  # TODO: Error handling
+def call_giphy_api(request_url: str):  # TODO: Error handling
     """
     The search_gif function takes a request URL as an argument, calls the Giphy API and returns the results of that search in JSON format.
     The function uses the Giphy API to make a GET request to their public API, which is documented at https://developers.giphy.com/docs/api#quick-start-guide
@@ -55,7 +55,7 @@ def search_gif(request_url: str):  # TODO: Error handling
 ################
 
 
-def create_gif(keywords: list) -> Gif:
+def search_gif(keywords: list[str]) -> Gif:
     """
     The create_gif function takes a list of keywords and returns a Gif object.
     The function first creates the query string using the create_keywords_query function, then uses that query to search for gifs on giphy.com.
@@ -67,7 +67,7 @@ def create_gif(keywords: list) -> Gif:
     query = create_keywords_query(keywords=keywords)
     request_url = set_giphy_search_url(query=query)
 
-    gif_data = search_gif(request_url=request_url).get("data")
+    gif_data = call_giphy_api(request_url=request_url).get("data")
 
     new_gif = Gif(giphy_id=gif_data[0].get("id"),
                   keywords=keywords,
