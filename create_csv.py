@@ -1,7 +1,7 @@
 import time
 import pandas as pd
 from tqdm import tqdm
-from authorization import auth_sp
+from Authorization import auth_sp
 
 sp = auth_sp
 

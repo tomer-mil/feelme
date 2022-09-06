@@ -1,4 +1,11 @@
 from urllib.parse import urlparse
+from dotenv import find_dotenv
+
+########################
+# GENERAL UTILITIES #
+########################
+
+ENV_PATH = find_dotenv()
 
 ########################
 # GIF SERVER UTILITIES #
@@ -75,3 +82,5 @@ def extract_keywords(response_keywords_text: str) -> dict:
         "keywords": keywords_list
     }
     return prompt_keywords
+
+

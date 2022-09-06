@@ -1,7 +1,8 @@
 import tekore as tk
 from flask import Flask, request, redirect, session
 from dotenv import find_dotenv, set_key
-
+from Utils import ENV_PATH
+from Authorization import authorize
 # https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
 
 ###############################
@@ -12,9 +13,9 @@ in_link = '<a href="/login">login</a>'
 out_link = '<a href="/logout">logout</a>'
 login_msg = f'You can {in_link} or {out_link}'
 
-SCOPES = [tk.scope.user_top_read]
-ENV_PATH = find_dotenv()
+SCOPES = [tk.scope.user_top_read, tk.scope.user_read_currently_playing]
 USER_REFRESH_TOKEN_KEY = "USER_REFRESH_TOKEN"
+USER_ACCESS_TOKEN_KEY = "USER_ACCESS_TOKEN"
 
 ###############################
 
@@ -26,9 +27,7 @@ users = {}  # User tokens: state -> token (use state as a user ID) = False
 
 def app_factory() -> Flask:
 
-    conf = tk.config_from_file(ENV_PATH, "SPOTIFY")  # Get required configuration from .env file
-    cred = tk.Credentials(*conf)  # Client with configuration used to authorize a user
-    spotify = tk.Spotify()
+    spotify, cred = authorize()
 
     app = Flask(__name__)  # Creates the Flask server
     app.config['SECRET_KEY'] = 'aliens'  # Set SECRET_KEY in order to use flask's session https://flask.palletsprojects.com/en/2.2.x/api/#flask.session
@@ -54,9 +53,12 @@ def app_factory() -> Flask:
 
         try:
             with spotify.token_as(token):  # New Spotify item with current user's token by changing previous token
-                playback = spotify.playback_currently_playing()  # User's "Now Playing"
+                # playback = spotify.playback_currently_playing()  # User's "Now Playing"
+                top_artists = [artist.name for artist in spotify.current_user_top_artists(time_range='long_term').items[:]]
+                # print(top_artists)
 
-            item = playback.item.name if playback else None
+            # item = playback.item.name if playback else None
+            item = top_artists if top_artists else None
             page += f'<br>Now playing: {item}'
         except tk.HTTPError:
             page += '<br>Error in retrieving now playing!'
@@ -93,8 +95,7 @@ def app_factory() -> Flask:
         session['user'] = state  # Set new 'state' for user in session
         users[state] = token  # Set new token and Refresh_Token for current user
 
-        add_refresh_to_env(state=state)  # Add Refresh_Token to .env file
-
+        add_tokens_to_env(state=state)  # Add Refresh_Token to .env file
         return redirect('/', 307)  # Redirect back to main
 
     @app.route('/logout', methods=['GET'])
@@ -107,8 +108,10 @@ def app_factory() -> Flask:
     return app
 
 
-def add_refresh_to_env(state: str):
+def add_tokens_to_env(state: str):
+    access_token = users.get(state).access_token
     refresh_token = users.get(state).refresh_token
+    set_key(ENV_PATH, USER_ACCESS_TOKEN_KEY, access_token)
     set_key(ENV_PATH, USER_REFRESH_TOKEN_KEY, refresh_token)
 
 
