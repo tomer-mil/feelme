@@ -75,3 +75,14 @@ def extract_keywords(response_keywords_text: str) -> dict:
         "keywords": keywords_list
     }
     return prompt_keywords
+
+
+############################
+# QUERY ANALYSIS UTILITIES #
+############################
+
+def clean_word(word: str) -> str:
+    if not word.isalpha():
+        word = word.replace(",", "").replace("-", " ")
+        word = word.strip("(").strip(")").strip("!")
+    return word.lower()
