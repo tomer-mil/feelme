@@ -41,24 +41,24 @@ def create_info_dict(text: str):
     QUERY_INFO_DICT = {
         "text": text,
         "tokens": {
-            "total_tokens": set_total_tokens(),
+            "total_tokens": 0,
             "tokens_in_lexicon": 0,
-            "avg_energy": 0.0,
-            "avg_valence": 0.0
         },
         "lang": lang,
         "energy": 0.0,
         "valence": 0.0,
         "rating": 0.0
     }
+    set_total_tokens()
 
 
-def detect_lang(text: str):  # TODO: ADD RETURN TYPE. Build language detection engine
+def detect_lang():  # TODO: ADD RETURN TYPE. Build language detection engine
     """
-    The detect_lang function takes a given text and returns its language encoding
-    :param text: The text to be analysed
+    The detect_lang function takes the given text and returns its language encoding
+
     :return: Encoded language code
     """
+    # TODO: lang_code = detect_language(text=QUERY_INFO_DICT["text"]), return lang_code.
     return DEFAULT_LANGUAGE
 
 
