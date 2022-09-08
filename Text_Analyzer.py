@@ -1,4 +1,3 @@
-from collections import namedtuple
 from MoodVec import MoodVec
 import pandas as pd
 from Utils import clean_word
