@@ -2,8 +2,8 @@ import os
 import json
 from dotenv import load_dotenv
 import openai
-from OpenAIConfig import config
-import SongAnalysis
+from OpenAI_Config import config
+import Song_Analyzer
 
 #############
 # CONSTANTS #

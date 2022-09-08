@@ -54,7 +54,7 @@ def extract_sentiments(response_sentiments_text: str) -> dict:
     :return: A dictionary with a list of strings as the value for the key "sentiments";
     """
     prompt_sentiments = {
-        "sentiments": response_sentiments_text.split(', ')
+        "sentiments": response_sentiments_text
     }
     return prompt_sentiments
 

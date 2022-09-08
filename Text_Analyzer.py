@@ -1,4 +1,5 @@
 from collections import namedtuple
+from MoodVec import MoodVec
 import pandas as pd
 from Utils import clean_word
 
@@ -18,16 +19,13 @@ global QUERY_INFO_DICT
 
 #############
 
-Mood_Vec = namedtuple("Mood_Vec", "energy valence")
-
-#############
-
 
 def create_info_dict(text: str):
     """
     The create_info_dict function takes a string as input and sets the global dictionary with the following:
         - text: The original text that was passed in to be analyzed.
-        - tokens: A dictionary containing the total number of tokens, the number of tokens in the lexicon, and average valence/energy scores for the text.
+        - tokens: A dictionary containing the total number of tokens, the number of tokens in the lexicon,
+            and average valence/energy scores for the text.
         - lang: The language of the given text
         - energy: Energy score for the text
         - valence: Valence score for the text
@@ -37,7 +35,7 @@ def create_info_dict(text: str):
 
     """
     global QUERY_INFO_DICT
-    lang = detect_lang(text=text)
+    lang = detect_lang()
     QUERY_INFO_DICT = {
         "text": text,
         "tokens": {
@@ -68,7 +66,6 @@ def set_total_tokens():
 
     :return: None
     """
-    global QUERY_INFO_DICT
     QUERY_INFO_DICT["tokens"]["total_tokens"] = len(tokenize(QUERY_INFO_DICT["text"]))
 
 
@@ -92,7 +89,6 @@ def calc_energy_valence():
 
     :return: None
     """
-    global QUERY_INFO_DICT
     totals_vec = calc_tokens_totals_vec(text=QUERY_INFO_DICT["text"])
     t_lex_tokens = QUERY_INFO_DICT["tokens"]["tokens_in_lexicon"]
     QUERY_INFO_DICT["energy"] = totals_vec.energy / t_lex_tokens
@@ -106,9 +102,7 @@ def calc_rating():
 
 
     :return: The ratio of the number of tokens in the lexicon to the total number of tokens
-    :doc-author: Trelent
     """
-    global QUERY_INFO_DICT
     rating = QUERY_INFO_DICT["tokens"]["tokens_in_lexicon"] / QUERY_INFO_DICT["tokens"]["total_tokens"]
     QUERY_INFO_DICT["rating"] = rating
 
@@ -136,11 +130,10 @@ def cnt_token_in_lex():
     :return: None
 
     """
-    global QUERY_INFO_DICT
     QUERY_INFO_DICT["tokens"]["tokens_in_lexicon"] += 1
 
 
-def calc_tokens_totals_vec(text: str) -> Mood_Vec:
+def calc_tokens_totals_vec(text: str) -> MoodVec:
     """
     The calc_tokens_totals_vec function takes a string of text as input and returns a Mood_Vec object with the total
     energy and valence values for that text.
@@ -160,7 +153,7 @@ def calc_tokens_totals_vec(text: str) -> Mood_Vec:
 
     for token in tokens_list:
 
-        if token in prev_tokens.keys():
+        if token in prev_tokens:
             if prev_tokens[token]["in_lex"]:
                 cnt_token_in_lex()
             total_energy += prev_tokens[token]["mood_vec"].energy
@@ -171,7 +164,7 @@ def calc_tokens_totals_vec(text: str) -> Mood_Vec:
             token_in_lex = token_mood_vec is not None
 
             if not token_in_lex:
-                token_mood_vec = Mood_Vec(energy=0.0, valence=0.0)
+                token_mood_vec = MoodVec(energy=0.0, valence=0.0)
             else:
                 cnt_token_in_lex()
             prev_tokens.update({
@@ -184,7 +177,7 @@ def calc_tokens_totals_vec(text: str) -> Mood_Vec:
             total_energy += token_mood_vec.energy
             total_valence += token_mood_vec.valence
 
-    return Mood_Vec(energy=total_energy, valence=total_valence)
+    return MoodVec(energy=total_energy, valence=total_valence)
 
 
 def calc_token_mood_vec(token: str):
@@ -196,7 +189,6 @@ def calc_token_mood_vec(token: str):
     :return: Mood_Vec for token; None if token is not in the lexicon
 
     """
-    global LEXICON
     word_series = LEXICON[LEXICON["word"] == token]
 
     if word_series.empty:
@@ -205,7 +197,7 @@ def calc_token_mood_vec(token: str):
     energy = float(word_series.iloc[0]["arousal"])
     valence = float(word_series.iloc[0]["valence"])
 
-    return Mood_Vec(energy=energy, valence=valence)
+    return MoodVec(energy=energy, valence=valence)
 
 
 #############
@@ -236,12 +228,12 @@ def set_lex_path(lang: str):  # TODO: ADD RETURN TYPE. We can add many languages
     return LEX_CSV_PATH
 
 
-###############
-# MAIN METHOD #
-###############
+################
+# MAIN METHODS #
+################
 
 
-def get_analysis(query: str) -> dict:
+def analyze_text(text: str) -> dict:
     """
     The get_analysis function takes a string as input and returns a dictionary of information about the text.
     The function first creates an info_dict, which is used to store all the information that will be returned.
@@ -249,11 +241,22 @@ def get_analysis(query: str) -> dict:
     energy and valence values of the text based on the lexicon. In addition the function rates the analysis.
     Finally, it returns a dictionary with the entire analysis data.
 
-    :param query:str: The text that is to be analyzed
+    :param text:str: The text that is to be analyzed
     :return: A dictionary of the query's mood analysis
     """
-    create_info_dict(text=query)
-    load_lexicon()
+    create_info_dict(text=text)
+    if LEXICON is None:
+        load_lexicon()
     set_mood_info()
 
     return QUERY_INFO_DICT
+
+
+def multiple_texts_analysis(*args: str) -> list[dict]:
+    analyzed_list = []
+
+    for text in args:
+        text_analysis = analyze_text(text=text)
+        analyzed_list.append(text_analysis)
+
+    return analyzed_list
