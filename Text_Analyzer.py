@@ -245,7 +245,9 @@ def analyze_text(text: str) -> dict:
     :return: A dictionary of the query's mood analysis
     """
     create_info_dict(text=text)
-    if LEXICON is None:
+    try:
+        LEXICON
+    except NameError:
         load_lexicon()
     set_mood_info()
 
@@ -253,6 +255,13 @@ def analyze_text(text: str) -> dict:
 
 
 def multiple_texts_analysis(*args: str) -> list[dict]:
+    """
+    The multiple_texts_analysis function accepts a list of strings and returns a list of dictionaries,
+    where each is an analysis of the given text.
+
+    :param *args:str: Pass an arbitrary number of strings to the function
+    :return: A list of dictionaries
+    """
     analyzed_list = []
 
     for text in args:

@@ -73,7 +73,7 @@ def parse_OpenAI_response(response) -> dict:
 # SONG SEARCHING METHODS #
 ##########################
 
-def search_song(text: str, sentiments: str) -> Song:
+def search_song(text: str, sentiments: str):
     """
     The search_song takes a parsed query i.e a text-sentiments pair, creates their weighted mood vector and searches
     the mood-song db for the song with mood values closest to the weighted mood vector, and returns it.
@@ -84,7 +84,7 @@ def search_song(text: str, sentiments: str) -> Song:
     """
     text_mood_vec = calc_query_mood_vec(text=text, sentiments=sentiments)
     # search_song_by_mood(mood_vec=text_mood_vec)
-    pass
+    return text_mood_vec
 
 
 def weighted_mood_vec(text_info: dict, sentiments_info: dict) -> MoodVec:
@@ -172,4 +172,4 @@ def search(query: str) -> MoodItem:
     gif = search_gif(query=data_dict["keywords"])
     song = search_song(text=data_dict["text"], sentiments=data_dict["sentiments"])
 
-    return MoodItem(song=anchor_song, gif=gif)
+    return MoodItem(song=Song(title="test", artist="test"), gif=gif)
