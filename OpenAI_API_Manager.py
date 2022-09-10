@@ -2,7 +2,7 @@ import os
 import json
 from dotenv import load_dotenv
 import openai
-from OpenAI_Config import config
+from OpenAI_Config import standard_config
 import Song_Analyzer
 
 #############
@@ -31,11 +31,11 @@ def get_OpenAI_analysis(prompt="", is_example_response=False, create_new_example
     """
     if not is_example_response:  # Later to be used as the main algorithm
         response = openai.Completion.create(
-            model=config["model"],
+            model=standard_config["model"],
             prompt=prompt,
-            temperature=config["temp"],
-            top_p=config["top_p"],
-            max_tokens=config["max_tokens"]
+            temperature=standard_config["temp"],
+            top_p=standard_config["top_p"],
+            max_tokens=standard_config["max_tokens"]
         )
 
         print(f"OpenAI Response: {response}")

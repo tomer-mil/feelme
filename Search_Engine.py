@@ -123,7 +123,7 @@ def calc_query_mood_vec(text: str, sentiments: str) -> MoodVec:
     :return: MoodVec object ready-to-use for searching
     """
     analyzed_texts = multiple_texts_analysis(text, sentiments)
-
+    print(f"text analysis:\n{analyzed_texts[0]}\nsenti analysis:\n{analyzed_texts[1]}")
     return weighted_mood_vec(text_info=analyzed_texts[0], sentiments_info=analyzed_texts[1])
 
 ###############################
@@ -171,5 +171,8 @@ def search(query: str) -> MoodItem:
 
     gif = search_gif(query=data_dict["keywords"])
     song = search_song(text=data_dict["text"], sentiments=data_dict["sentiments"])
-
+    print(f"gif:\n{gif}\nsong values:\n{song}")
     return MoodItem(song=Song(title="test", artist="test"), gif=gif)
+
+
+search("The wolf continued down the lane and he passed by the second house made of sticks; and he saw the house, and he smelled the pigs inside, and his mouth began to water as he thought about the fine dinner they would make.")
