@@ -54,7 +54,7 @@ def extract_sentiments(response_sentiments_text: str) -> dict:
     :return: A dictionary with a list of strings as the value for the key "sentiments";
     """
     prompt_sentiments = {
-        "sentiments": response_sentiments_text.split(', ')
+        "sentiments": response_sentiments_text
     }
     return prompt_sentiments
 
@@ -75,3 +75,14 @@ def extract_keywords(response_keywords_text: str) -> dict:
         "keywords": keywords_list
     }
     return prompt_keywords
+
+
+############################
+# QUERY ANALYSIS UTILITIES #
+############################
+
+def clean_word(word: str) -> str:
+    if not word.isalpha():
+        word = word.replace(",", "").replace("-", " ")
+        word = word.strip("(").strip(")").strip("!")
+    return word.lower()

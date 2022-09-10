@@ -1,7 +1,6 @@
 import json
 import dotenv
 from urllib import parse, request
-from Utils import create_keywords_query
 from Gif import Gif
 
 #############
@@ -55,22 +54,21 @@ def call_giphy_api(request_url: str):  # TODO: Error handling
 ################
 
 
-def search_gif(keywords: list[str]) -> Gif:
+def search_gif(query: str) -> Gif:
     """
     The create_gif function takes a list of keywords and returns a Gif object.
     The function first creates the query string using the create_keywords_query function, then uses that query to search for gifs on giphy.com.
     It then takes the data from that search and creates a new Gif object with it's giphy id, keywords, and images.
 
-    :param keywords:list: Pass in a list of keywords to be used
+    :param query:list: Pass in a list of keywords to be used
     :return: A gif object
     """
-    query = create_keywords_query(keywords=keywords)
     request_url = set_giphy_search_url(query=query)
 
     gif_data = call_giphy_api(request_url=request_url).get("data")
 
     new_gif = Gif(giphy_id=gif_data[0].get("id"),
-                  keywords=keywords,
+                  keywords=query,
                   images=gif_data[0].get("images"))
 
     return new_gif

@@ -1,3 +1,4 @@
+from MoodVec import MoodVec
 class Song:
 
     # Class Attributes
@@ -13,15 +14,13 @@ class Song:
                  artist: str,
                  spotify_ID: str = None,
                  href: str = None,
-                 energy: int = None,
-                 valence: int = None):
+                 mood_vec: MoodVec = None):
 
         self.spotify_ID = spotify_ID
         self.href = href
         self.title = title
         self.artist = artist
-        self.energy = energy
-        self.valence = valence
+        self.mood_vec = mood_vec
 
     def __repr__(self):
         return f"<title: {self.title}, by: {self.artist} | ID: {self.spotify_ID}>"
@@ -36,7 +35,7 @@ class Song:
         return self.spotify_ID
 
     def get_mood_vec(self):
-        return self.energy, self.valence
+        return self.mood_vec
 
     def get_href(self):
         return self.href

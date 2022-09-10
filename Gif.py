@@ -3,7 +3,7 @@ from Utils import clean_gif_url
 
 class Gif:
     def __init__(self, giphy_id: str,
-                 keywords: list,
+                 keywords: str,
                  images: dict):
         self.giphy_id = giphy_id
         self.keywords = keywords
