@@ -10,9 +10,9 @@ standard_config = {
 
 
 finetuned_config = {
-    "model": FINE_TUNE_CURIE_MODEL,
-    "temp": 0.2,
+    "model": STANDRD_DAVINCI_MODEL,
+    "temp": 1.0,
     "top_p": 1.0,
-    "max_tokens": 27,
-    "stop": ["\n"]
+    "max_tokens": 600,
+    "stop": "###"
 }

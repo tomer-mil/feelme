@@ -25,6 +25,10 @@ SENTIMENTS_WEIGHT = 0.7
 ###########################
 
 
+def wrap_input(input_text: str) -> str:
+    return input_text+' ###'
+
+
 def generate_prompt(query: str) -> str:
     """
     The generate_prompt function takes in a string of text entered by the user (his story) and returns a ready-to-use
@@ -131,6 +135,9 @@ def calc_query_mood_vec(text: str, sentiments: str) -> MoodVec:
 ###############################
 
 
+
+
+
 def query_to_data_dict(query: str) -> dict:
     """
     The query_to_data_dict function takes a query string as input and returns a dictionary with parsed data.
@@ -148,7 +155,7 @@ def query_to_data_dict(query: str) -> dict:
         "text": query
     }
 
-    prompt = generate_prompt(query=query)
+    prompt = wrap_input(input_text=query)
     openai_response = get_OpenAI_analysis(prompt=prompt)
 
     data_dict.update(parse_OpenAI_response(openai_response))
@@ -175,4 +182,5 @@ def search(query: str) -> MoodItem:
     return MoodItem(song=Song(title="test", artist="test"), gif=gif)
 
 
-search("The wolf continued down the lane and he passed by the second house made of sticks; and he saw the house, and he smelled the pigs inside, and his mouth began to water as he thought about the fine dinner they would make.")
+# search("The wolf continued down the lane and he passed by the second house made of sticks; and he saw the house, and he smelled the pigs inside, and his mouth began to water as he thought about the fine dinner they would make.")
+search("I'm having the worst day. i went out and it started raining on me, then my dog died.")
