@@ -54,13 +54,13 @@ def app_factory() -> Flask:
         try:
             with spotify.token_as(token):  # New Spotify item with current user's token by changing previous token
                 # playback = spotify.playback_currently_playing()  # User's "Now Playing"
-                top_artists = [artist.name for artist in spotify.current_user_top_artists(time_range='long_term').items[:]]
+                top_artists = [artist.name for artist in spotify.current_user_top_artists(time_range='long_term').items]
 
             # item = playback.item.name if playback else None
             item = top_artists if top_artists else None
             page += f'<br>Your favorites artists are: {item}'
         except tk.HTTPError:
-            page += '<br>Error in retrieving favorites artists!'
+            page += '<br>Error in retrieving favorite artists!'
 
         return page
 
