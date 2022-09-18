@@ -2,7 +2,8 @@ import tekore as tk
 from flask import Flask, request, redirect, session
 from dotenv import find_dotenv, set_key
 from Utils import ENV_PATH
-from Authorization import authorize
+from Authorization import authorize, authorize_try
+
 # https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
 
 ###############################
@@ -27,7 +28,7 @@ users = {}  # User tokens: state -> token (use state as a user ID) = False
 
 def app_factory() -> Flask:
 
-    spotify, cred = authorize()
+    spotify, cred = authorize_try(), authorize()[1]
 
     app = Flask(__name__)  # Creates the Flask server
     app.config['SECRET_KEY'] = 'aliens'  # Set SECRET_KEY in order to use flask's session https://flask.palletsprojects.com/en/2.2.x/api/#flask.session

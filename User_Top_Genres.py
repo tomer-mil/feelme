@@ -1,18 +1,22 @@
 import tekore as tk
 from Utils import ENV_PATH
 from dotenv import load_dotenv
-from Authorization import authorize
+from Authorization import get_spotify
 from itertools import chain
-from collections import OrderedDict
 import os
 
 
-###### CONSTANTS ######
+##############
+# CONSTANTS #
+##############
 ITEMS_LIM = 50  # any number from 1 to 50
 TIME_RANGE = 'long_term'  # can also use short_term or medium_term
 
 
-###### HELPER FUNCS ######
+#################
+# HELPER FUNCS #
+#################
+
 def histogram(lst: list[int]) -> dict:
     """
     The histogram function takes a list of integers and returns a dictionary with the number of times each integer
@@ -27,20 +31,6 @@ def histogram(lst: list[int]) -> dict:
     return hist
 
 
-def get_spotify() -> tk.Spotify:
-    """
-    The get_spotify function returns a Spotify object that is authorized to access the client's account.
-    It does this by first checking if there is an existing token in the cache, and if not, it requests one from Spotify.
-
-    :return: A Spotify object (from the tekore library)
-    """
-    return authorize()[0]
-
-
-spotify = get_spotify()
-
-
-# get access token from .env file
 def get_access_token() -> str:
     """
     The get_access_token function returns the user's access token from the environment variable.
@@ -51,7 +41,16 @@ def get_access_token() -> str:
     return access_token
 
 
+##################
+# AUTHORIZATION #
+##################
+
+spotify = get_spotify()
 access_token = get_access_token()
+
+###################
+# MAIN FUNCTIONS #
+###################
 
 
 def get_top_artists() -> list[tk.model.FullArtist]:
