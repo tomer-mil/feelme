@@ -1,4 +1,6 @@
-from MoodVec import MoodVec
+from items.MoodVec import MoodVec
+
+
 class Song:
 
     # Class Attributes

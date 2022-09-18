@@ -1,1 +1,0 @@
-{"id": "cmpl-5kEra0eylc72LfhIPURW1BwW3MD4Q", "object": "text_completion", "created": 1661701906, "model": "text-davinci-002", "choices": [{"text": "\n\n\"Breathe\" by Pink Floyd | frustration, anxiety, stress | failed, energy", "index": 0, "logprobs": null, "finish_reason": "stop"}], "usage": {"prompt_tokens": 52, "completion_tokens": 20, "total_tokens": 72}}

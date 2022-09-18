@@ -1,5 +1,5 @@
-from Gif import Gif
-from Song import Song
+from items.Gif import Gif
+from items.Song import Song
 
 
 class MoodItem:

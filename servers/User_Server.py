@@ -23,12 +23,12 @@ users = {}  # User tokens: state -> token (use state as a user ID) = False
 
 ###############################
 
+conf = tk.config_from_file(ENV_PATH, "SPOTIFY")  # Get required configuration from .env file
+cred = tk.Credentials(*conf)  # Client with configuration used to authorize a user
+spotify = tk.Spotify()
+
 
 def app_factory() -> Flask:
-
-    conf = tk.config_from_file(ENV_PATH, "SPOTIFY")  # Get required configuration from .env file
-    cred = tk.Credentials(*conf)  # Client with configuration used to authorize a user
-    spotify = tk.Spotify()
 
     app = Flask(__name__)  # Creates the Flask server
     app.config['SECRET_KEY'] = 'aliens'  # Set SECRET_KEY in order to use flask's session https://flask.palletsprojects.com/en/2.2.x/api/#flask.session
@@ -47,7 +47,7 @@ def app_factory() -> Flask:
 
         page = f'User ID: {user}<br>{login_msg}'  # Main (login) page if user is found
 
-        # Generate new Refresh_Token if current is about to expire
+        # Generate new Access_Token if current is about to expire
         if token.is_expiring:
             token = cred.refresh(token)
             users[user] = token
