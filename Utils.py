@@ -1,4 +1,11 @@
 from urllib.parse import urlparse
+from dotenv import find_dotenv
+
+########################
+# GENERAL UTILITIES #
+########################
+
+ENV_PATH = find_dotenv()
 
 ########################
 # GIF SERVER UTILITIES #
@@ -77,6 +84,7 @@ def extract_keywords(response_keywords_text: str) -> dict:
     return prompt_keywords
 
 
+
 ############################
 # QUERY ANALYSIS UTILITIES #
 ############################
@@ -86,3 +94,4 @@ def clean_word(word: str) -> str:
         word = word.replace(",", "").replace("-", " ")
         word = word.strip("(").strip(")").strip("!")
     return word.lower()
+

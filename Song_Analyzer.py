@@ -1,4 +1,4 @@
-from authorization import auth_sp
+from Authorization import auth_sp
 from Song import Song
 
 ###############################
