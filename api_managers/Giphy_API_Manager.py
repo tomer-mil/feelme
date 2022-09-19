@@ -1,7 +1,7 @@
 import json
 import dotenv
 from urllib import parse, request
-from Gif import Gif
+
 
 #############
 # CONSTANTS #
@@ -42,33 +42,16 @@ def call_giphy_api(request_url: str):  # TODO: Error handling
     The function uses the Giphy API to make a GET request to their public API, which is documented at https://developers.giphy.com/docs/api#quick-start-guide
 
     :param request_url:str: A formatted URL to call the API with
-    :return: A dictionary of gif data retrieved fro Giphy
+    :return: A dictionary of gif data retrieved from Giphy
     """
     with request.urlopen(url=request_url) as response:
         data = json.loads(response.read())
     return data
 
 
-################
-# MAIN METHOD #
-################
-
-
-def search_gif(query: str) -> Gif:
-    """
-    The create_gif function takes a list of keywords and returns a Gif object.
-    The function first creates the query string using the create_keywords_query function, then uses that query to search for gifs on giphy.com.
-    It then takes the data from that search and creates a new Gif object with it's giphy id, keywords, and images.
-
-    :param query:list: Pass in a list of keywords to be used
-    :return: A gif object
-    """
-    request_url = set_giphy_search_url(query=query)
-
+def get_gif_data_from_giphy(keywords_list: list[str]) -> dict:
+    keywords_str = " ,".join(keywords_list)
+    request_url = set_giphy_search_url(query=keywords_str)
     gif_data = call_giphy_api(request_url=request_url).get("data")
 
-    new_gif = Gif(giphy_id=gif_data[0].get("id"),
-                  keywords=query,
-                  images=gif_data[0].get("images"))
-
-    return new_gif
+    return gif_data

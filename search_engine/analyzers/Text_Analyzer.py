@@ -1,12 +1,12 @@
-from MoodVec import MoodVec
+from items.MoodVec import MoodVec
 import pandas as pd
-from Utils import clean_word
+from configs.Utils import clean_word
 
 #############
 # CONSTANTS #
 #############
 
-LEX_CSV_PATH = "/Users/tomermildworth/Desktop/Coding/FeelMe/feelme/lexicons/en/NRC-VAD-Lexicon_csv.csv"
+LEX_CSV_PATH = "./lexicons/en/NRC-VAD-Lexicon_csv.csv"
 DEFAULT_LANGUAGE = "en"
 
 ###########
@@ -88,10 +88,10 @@ def calc_energy_valence():
 
     :return: None
     """
-    totals_vec = calc_tokens_totals_vec(text=QUERY_INFO_DICT["text"])
-    t_lex_tokens = QUERY_INFO_DICT["tokens"]["tokens_in_lexicon"]
-    QUERY_INFO_DICT["energy"] = totals_vec.energy / t_lex_tokens
-    QUERY_INFO_DICT["valence"] = totals_vec.valence / t_lex_tokens
+    totals_moodvec = calc_tokens_totals_vec(text=QUERY_INFO_DICT["text"])
+    total_lex_tokens = QUERY_INFO_DICT["tokens"]["tokens_in_lexicon"]
+    QUERY_INFO_DICT["energy"] = totals_moodvec.energy / total_lex_tokens
+    QUERY_INFO_DICT["valence"] = totals_moodvec.valence / total_lex_tokens
 
 
 def calc_rating():
@@ -106,7 +106,7 @@ def calc_rating():
     QUERY_INFO_DICT["rating"] = rating
 
 
-def tokenize(text: str) -> list[str]:
+def tokenize(text: str | list[str]) -> list[str]:
     """
     The tokenize function takes a string as input and returns a list of tokens.
     The tokens are cleaned words from the text, with all punctuation removed.
@@ -116,9 +116,8 @@ def tokenize(text: str) -> list[str]:
     :return: A list of words that have been cleaned
 
     """
-    split_txt = text.split()
-    for i in range(len(split_txt)):
-        split_txt[i] = clean_word(word=split_txt[i])
+    split_txt = text.split() if type(text) == str else text
+    split_txt[:] = [clean_word(word=word) for word in split_txt]
     return split_txt
 
 
@@ -132,7 +131,7 @@ def cnt_token_in_lex():
     QUERY_INFO_DICT["tokens"]["tokens_in_lexicon"] += 1
 
 
-def calc_tokens_totals_vec(text: str) -> MoodVec:
+def calc_tokens_totals_vec(text: str | list[str]) -> MoodVec:
     """
     The calc_tokens_totals_vec function takes a string of text as input and returns a Mood_Vec object with the total
     energy and valence values for that text.
@@ -144,7 +143,7 @@ def calc_tokens_totals_vec(text: str) -> MoodVec:
     :return: A Mood_Vec object that contains the total energy and valence values of all tokens in the text
     """
 
-    tokens_list = tokenize(text=text)
+    tokens_list = tokenize(text=text) if type(text) == str else text
     prev_tokens = {}
 
     total_energy = 0.0
@@ -255,10 +254,10 @@ def analyze_text(text: str) -> dict:
 
 def multiple_texts_analysis(*args: str) -> list[dict]:
     """
-    The multiple_texts_analysis function accepts a list of strings and returns a list of dictionaries,
+    The multiple_texts_analysis function accepts multiple amount of strings and returns a list of dictionaries,
     where each is an analysis of the given text.
 
-    :param *args:str: Pass an arbitrary number of strings to the function
+    :param args:str: Pass an arbitrary number of strings to the function
     :return: A list of dictionaries
     """
     analyzed_list = []

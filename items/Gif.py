@@ -1,4 +1,4 @@
-from Utils import clean_gif_url
+from configs.Utils import clean_gif_url
 
 
 class Gif:
