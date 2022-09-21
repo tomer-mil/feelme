@@ -1,5 +1,4 @@
 import tekore as tk
-from Utils import ENV_PATH
 from dotenv import load_dotenv
 from Authorization import get_spotify
 from itertools import chain
@@ -9,17 +8,39 @@ import os
 ##############
 # CONSTANTS #
 ##############
+
 ITEMS_LIM = 50  # any number from 1 to 50
 TIME_RANGE = 'long_term'  # can also use short_term or medium_term
 
+##################
+# AUTHORIZATION #
+##################
+
+
+def get_access_token() -> str:
+    """
+    The get_access_token function returns the user's access token from the environment variable.
+    :return: A tk.Token as a string
+    """
+    load_dotenv()
+
+    access_token = os.getenv(key='USER_ACCESS_TOKEN')
+    return access_token
+
+
+spotify = get_spotify()
+access_token = get_access_token()
+
+###################
 
 #################
 # HELPER FUNCS #
 #################
 
-def histogram(lst: list[int]) -> dict:
+
+def histogram(lst: list) -> dict:
     """
-    The histogram function takes a list of integers and returns a dictionary with the number of times each integer
+    The histogram function takes a list any kind and returns a dictionary with the number of times each integer
     appears in the list. For example, histogram([4, 9, 7]) should return {4: 1, 9: 1, 7: 1}
 
     :param lst: Represent the list of values that will be used to create the histogram
@@ -31,26 +52,9 @@ def histogram(lst: list[int]) -> dict:
     return hist
 
 
-def get_access_token() -> str:
-    """
-    The get_access_token function returns the user's access token from the environment variable.
-    :return: A tk.Token as a string
-    """
-    load_dotenv()
-    access_token = os.getenv(key='USER_ACCESS_TOKEN')
-    return access_token
-
-
-##################
-# AUTHORIZATION #
-##################
-
-spotify = get_spotify()
-access_token = get_access_token()
-
-###################
-# MAIN FUNCTIONS #
-###################
+###############
+# TOP ARTISTS #
+###############
 
 
 def get_top_artists() -> list[tk.model.FullArtist]:
@@ -66,6 +70,11 @@ def get_top_artists() -> list[tk.model.FullArtist]:
     return top_artists
 
 
+##############
+# TOP TRACKS #
+##############
+
+
 def get_top_tracks() -> list[tk.model.FullTrack]:
     """
     The get_top_tracks function returns a list of the user's top tracks. It returns a list of tekore FullTrack objects.
@@ -76,6 +85,11 @@ def get_top_tracks() -> list[tk.model.FullTrack]:
         top_tracks = [track for track in spotify.current_user_top_tracks(time_range=TIME_RANGE,
                                                                          limit=ITEMS_LIM).items]
     return top_tracks
+
+
+##############
+# TOP GENRES #
+##############
 
 
 def get_users_top_artists_genres() -> list[str]:
@@ -92,7 +106,18 @@ def get_users_top_artists_genres() -> list[str]:
     return genres_list
 
 
-def hist_genres_helper(lst) -> dict[str]:
+def hist_genres() -> dict[str]:
+    """
+    The hist_genres function takes in a list of genres, and returns an histogram, implemented as a dictionary
+    with the number of times each genre appears.
+
+    :return: A dictionary of the genres (keys) and their frequencies (values)
+    """
+    genres_list = get_users_top_artists_genres()
+    return hist_genres_helper(genres_list)
+
+
+def hist_genres_helper(lst: list[str]) -> dict[str]:
     """
     The hist_genres_helper function takes a list of genres and returns a dictionary with the number of times each genre appears
     in the list.
@@ -105,14 +130,3 @@ def hist_genres_helper(lst) -> dict[str]:
     sorted_tuples = sorted(hist.items(), key=lambda x: x[1], reverse=True)
     hist = dict(sorted_tuples)
     return hist
-
-
-def hist_genres() -> dict[str]:
-    """
-    The hist_genres function takes in a list of genres, and returns an histogram, implemented as a dictionary
-    with the number of times each genre appears.
-
-    :return: A dictionary of the genres (keys) and their frequencies (values)
-    """
-    genres_list = get_users_top_artists_genres()
-    return hist_genres_helper(genres_list)

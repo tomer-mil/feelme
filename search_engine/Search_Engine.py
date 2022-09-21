@@ -1,11 +1,9 @@
 from items.Gif import Gif
 from items.MoodItem import MoodItem
-from api_managers.Giphy_API_Manager import get_gif_data_from_giphy
+from sources.giphy.Giphy_API_Manager import get_gif_data_from_giphy
 from search_engine.QueryData import QueryData
 from search_engine.analyzers.MoodVec_Analyzer import calc_query_mood_vec
 from items.Song import Song
-
-from servers.User_Server import spotify
 
 
 ##########################

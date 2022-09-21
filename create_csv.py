@@ -1,8 +1,6 @@
 import time
-import pandas as pd
-from tqdm import tqdm
-from Authorization import get_spotify, authorize_try
-from User_Top_Genres import hist_genres, get_top_artists, get_top_tracks
+from sources.spotify.Authorization import authorize_try
+from sources.spotify.User_Top_Items import hist_genres, get_top_artists, get_top_tracks
 
 ##############
 # CONSTANTS #

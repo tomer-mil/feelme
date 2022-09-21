@@ -1,8 +1,8 @@
 import tekore as tk
 from flask import Flask, request, redirect, session
-from dotenv import find_dotenv, set_key
-from Utils import ENV_PATH
-from Authorization import authorize, authorize_try
+from dotenv import set_key
+from configs.Utils import ENV_PATH
+from sources.spotify.Authorization import authorize, authorize_try
 
 # https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
 

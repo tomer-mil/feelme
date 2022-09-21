@@ -2,7 +2,7 @@ import os
 import json
 import openai
 from openai.openai_object import OpenAIObject
-import api_managers.OpenAI_Config as OpenAI_Config
+import sources.openai.OpenAI_Config as OpenAI_Config
 from dotenv import load_dotenv
 
 #############

@@ -1,5 +1,5 @@
 from openai.openai_object import OpenAIObject
-from api_managers.OpenAI_API_Manager import get_OpenAI_analysis
+from sources.openai.OpenAI_API_Manager import get_OpenAI_analysis
 from configs import Utils
 
 
