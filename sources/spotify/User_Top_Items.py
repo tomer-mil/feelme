@@ -1,6 +1,6 @@
 import tekore as tk
 from dotenv import load_dotenv
-from Authorization import get_spotify
+from sources.spotify.Authorization import get_spotify
 from itertools import chain
 import os
 
