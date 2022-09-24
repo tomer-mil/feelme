@@ -2,7 +2,7 @@ from items.MoodVec import MoodVec
 from sources.spotify.Authorization import authorize
 from sources.spotify.User_Top_Items import get_top_tracks
 from items.Song import Song
-from sources.db.quadtree2.Quadtree import Quadtree, NodeData, Point
+from sources.db.quadtree2.Node import Node, NodeData, Point, Quadtree
 
 sp = authorize()[0]
 quadtree = Quadtree()
@@ -10,7 +10,7 @@ quadtree = Quadtree()
 nodes = []
 
 top_tracks = get_top_tracks()
-for track in top_tracks:
+for track in top_tracks[:10]:
 
     track_energy = sp.track_audio_features(track_id=track.id).energy
     track_valence = sp.track_audio_features(track_id=track.id).valence
@@ -25,11 +25,11 @@ for track in top_tracks:
                 mood_vec=mood_vec
                 )
 
-    new_point = Point(x=track_energy, y=track_valence)
-    node = NodeData(position=new_point, data=song)
+    # new_point = Point(x=track_energy, y=track_valence)
+    # node = NodeData(position=new_point, data=song)
 
-    nodes.append(node)
-    quadtree.insert(node=node)
+    # nodes.append(node)
+    quadtree.insert_data(data=song)
 
 # print(quadtree)
 
