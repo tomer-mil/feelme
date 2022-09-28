@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from items.MoodVec import MoodVec
 
 
@@ -26,6 +28,14 @@ class Song:
 
     def __repr__(self):
         return f"<title: {self.title}, by: {self.artist} | ID: {self.spotify_ID}>"
+
+    def __deepcopy__(self, memo):
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        for k, v in self.__dict__.items():
+            setattr(result, k, deepcopy(v, memo))
+        return result
 
     def get_title(self):
         return self.title

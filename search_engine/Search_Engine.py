@@ -5,7 +5,7 @@ from search_engine.QueryData import QueryData
 from search_engine.analyzers.MoodVec_Analyzer import calc_query_mood_vec
 from items.Song import Song
 
-from sources.db.Demo_db import search_song_by_mood
+from sources.db.Demo_50_songs_run import search_song_by_mood
 ##########################
 # SONG SEARCHING METHODS #
 ##########################
