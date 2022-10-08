@@ -5,7 +5,7 @@ from search_engine.QueryData import QueryData
 from search_engine.analyzers.MoodVec_Analyzer import calc_query_mood_vec
 from items.Song import Song
 
-from sources.db.Demo_50_songs_run import search_song_by_mood
+
 ##########################
 # SONG SEARCHING METHODS #
 ##########################
@@ -21,6 +21,7 @@ def search_song(text: str, sentiments: str):
     :return: Song object with the suggested song from db
     """
     text_mood_vec = calc_query_mood_vec(text=text, sentiments=sentiments)
+
     # song = search_song_by_mood(mood_v=text_mood_vec)  # TODO
     return text_mood_vec
 

@@ -1,0 +1,51 @@
+,title,artist,spotify_ID,href,energy,valence
+0,שמיניות,Cohen,5WKPqRn5jgeey9CVvCTWXs,https://api.spotify.com/v1/tracks/5WKPqRn5jgeey9CVvCTWXs,0.64,0.512
+1,מה שאתה רואה עכשיו,Assaf Amdursky,5miazkZWOiBxhqYwPZCvMM,https://api.spotify.com/v1/tracks/5miazkZWOiBxhqYwPZCvMM,0.695,0.704
+2,הירוק עולה,Amir Lev,6VGSRoIE93Pl2gdYlSL6Vv,https://api.spotify.com/v1/tracks/6VGSRoIE93Pl2gdYlSL6Vv,0.248,0.246
+3,אישון לילה,Cohen,2TjDEc1LvDvfOLCGXQ0XpE,https://api.spotify.com/v1/tracks/2TjDEc1LvDvfOLCGXQ0XpE,0.622,0.495
+4,אסור - Live,Mergui,797ZF4oD4ODo548B8fECON,https://api.spotify.com/v1/tracks/797ZF4oD4ODo548B8fECON,0.427,0.272
+5,כל הצבעים,Assaf Amdursky,5wJU6YqrhPLRsWUmEuzjZ8,https://api.spotify.com/v1/tracks/5wJU6YqrhPLRsWUmEuzjZ8,0.471,0.261
+6,Ghost Ship,Blur,61JDaStnXY3vbaEjliB5WA,https://api.spotify.com/v1/tracks/61JDaStnXY3vbaEjliB5WA,0.722,0.858
+7,Prisoner (feat. Dua Lipa),Miley Cyrus,5JqZ3oqF00jkT81foAFvqg,https://api.spotify.com/v1/tracks/5JqZ3oqF00jkT81foAFvqg,0.67,0.595
+8,אלפים,Peled,0UhX68nsc5Ig0l8hvJxlYo,https://api.spotify.com/v1/tracks/0UhX68nsc5Ig0l8hvJxlYo,0.679,0.5
+9,עד שנשרף,Assaf Amdursky,0bbtBen32cdfN9nYdpkutu,https://api.spotify.com/v1/tracks/0bbtBen32cdfN9nYdpkutu,0.639,0.93
+10,Strawberry Fields Forever - Remastered 2009,The Beatles,3Am0IbOxmvlSXro7N5iSfZ,https://api.spotify.com/v1/tracks/3Am0IbOxmvlSXro7N5iSfZ,0.502,0.289
+11,מלאך שומר,Ori Shochat,4OrbpiDYNSQMO292Ul4yqT,https://api.spotify.com/v1/tracks/4OrbpiDYNSQMO292Ul4yqT,0.403,0.634
+12,פלוס אחד - Live,Mergui,1AsjAf7Ld8I5JCcjRoXiMV,https://api.spotify.com/v1/tracks/1AsjAf7Ld8I5JCcjRoXiMV,0.304,0.499
+13,חד משמעית,Ori Shochat,3P8nhMkr0eemzG8luQeyNv,https://api.spotify.com/v1/tracks/3P8nhMkr0eemzG8luQeyNv,0.84,0.848
+14,Mo Money Mo Problems (Stripped Version),The Notorious B.I.G.,4FUA2C0x6UEcw7YGWNs7oM,https://api.spotify.com/v1/tracks/4FUA2C0x6UEcw7YGWNs7oM,0.642,0.812
+15,Dreams - 2004 Remaster,Fleetwood Mac,5TDZyWDfbQFQJabbPwImVY,https://api.spotify.com/v1/tracks/5TDZyWDfbQFQJabbPwImVY,0.487,0.776
+16,Papi Chulo,Octavian,6Juv5N0dNU1imms9c9u1dA,https://api.spotify.com/v1/tracks/6Juv5N0dNU1imms9c9u1dA,0.563,0.307
+17,צל של תוכי,Assaf Amdursky,5u42DRWLbAqJ6rJXv742Fa,https://api.spotify.com/v1/tracks/5u42DRWLbAqJ6rJXv742Fa,0.534,0.256
+18,Breathe Deeper - Lil Yachty Remix,Tame Impala,6GtOsEzNUhJghrIf6UTbRV,https://api.spotify.com/v1/tracks/6GtOsEzNUhJghrIf6UTbRV,0.725,0.577
+19,רצינו פלא,Assaf Amdursky,0aeJAjr3jgwqRj64HjDUme,https://api.spotify.com/v1/tracks/0aeJAjr3jgwqRj64HjDUme,0.546,0.85
+20,Hafla,Omer Avital,3SQ0ZbX5cymm6cH4sZu36P,https://api.spotify.com/v1/tracks/3SQ0ZbX5cymm6cH4sZu36P,0.566,0.801
+21,15 Step,Radiohead,4oXg7xT4ksBxHTx8PcmSXw,https://api.spotify.com/v1/tracks/4oXg7xT4ksBxHTx8PcmSXw,0.854,0.844
+22,קובי,Dudu Faruk,5OYyjNrKYBvKkpMTcj5DCI,https://api.spotify.com/v1/tracks/5OYyjNrKYBvKkpMTcj5DCI,0.68,0.502
+23,אחותי מריים,Amir Lev,2wIscD5LUF2LOasmTS4hae,https://api.spotify.com/v1/tracks/2wIscD5LUF2LOasmTS4hae,0.563,0.929
+24,חשמל מהשמש,Amir Lev,2wLfKBWE8PJp5SNGOf11IU,https://api.spotify.com/v1/tracks/2wLfKBWE8PJp5SNGOf11IU,0.45,0.951
+25,הנר שלנו,Assaf Amdursky,6IWk3VVQS7uSTQyYxZMxOQ,https://api.spotify.com/v1/tracks/6IWk3VVQS7uSTQyYxZMxOQ,0.374,0.42
+26,"Hi, I'm Dave - From ""DAVE""","""DAVE""",0zhDapvgG0OvuxAKUoqXnY,https://api.spotify.com/v1/tracks/0zhDapvgG0OvuxAKUoqXnY,0.552,0.783
+27,"Ain't No Fun (If the Homies Cant Have None) (feat. Nate Dogg, Warren G & Kurupt)",Snoop Dogg,3bA5Xfk5JyPGtBh00GX8Gk,https://api.spotify.com/v1/tracks/3bA5Xfk5JyPGtBh00GX8Gk,0.798,0.695
+28,ג'וזפין,Assaf Amdursky,7lsNp87uH6jwbsW8QY9qGK,https://api.spotify.com/v1/tracks/7lsNp87uH6jwbsW8QY9qGK,0.386,0.348
+29,זמר מזרחית,Dudu Faruk,17wDNpUFEztqN377fJFidf,https://api.spotify.com/v1/tracks/17wDNpUFEztqN377fJFidf,0.855,0.61
+30,יש כיוונים,Amir Lev,45SXdDgT4i9Mx4glzAr9OA,https://api.spotify.com/v1/tracks/45SXdDgT4i9Mx4glzAr9OA,0.217,0.498
+31,TKN (feat. Travis Scott),ROSALÍA,4w47S36wQGBhGg073q3nt7,https://api.spotify.com/v1/tracks/4w47S36wQGBhGg073q3nt7,0.509,0.485
+32,מעיין,Amir Lev,79LQrdjzwVw2LJy8dADYXk,https://api.spotify.com/v1/tracks/79LQrdjzwVw2LJy8dADYXk,0.459,0.833
+33,סאנו ז'אוול,Amir Lev,7DSFXwV5jb4RblHXpZubuB,https://api.spotify.com/v1/tracks/7DSFXwV5jb4RblHXpZubuB,0.712,0.748
+34,The Chain - 2004 Remaster,Fleetwood Mac,7Dm3dV3WPNdTgxoNY7YFnc,https://api.spotify.com/v1/tracks/7Dm3dV3WPNdTgxoNY7YFnc,0.755,0.637
+35,Echoes,Pink Floyd,7kriFJLY2KOhw5en9iI2jb,https://api.spotify.com/v1/tracks/7kriFJLY2KOhw5en9iI2jb,0.322,0.138
+36,משהו שונה בך,Assaf Amdursky,6pyqn8OHN5l89knj2ZsOj6,https://api.spotify.com/v1/tracks/6pyqn8OHN5l89knj2ZsOj6,0.162,0.0572
+37,ירושלים,Amir Lev,3xIGszXYPrL68pQ0SFiaUZ,https://api.spotify.com/v1/tracks/3xIGszXYPrL68pQ0SFiaUZ,0.242,0.31
+38,מונית צהובה,Amir Lev,5PsbdoATtVE7cYrDSvbMlR,https://api.spotify.com/v1/tracks/5PsbdoATtVE7cYrDSvbMlR,0.35,0.525
+39,One of These Days,Pink Floyd,6uU0Hu8oVk9gBihokcrDMH,https://api.spotify.com/v1/tracks/6uU0Hu8oVk9gBihokcrDMH,0.508,0.403
+40,Save Your Tears,The Weeknd,5QO79kh1waicV47BqGRL3g,https://api.spotify.com/v1/tracks/5QO79kh1waicV47BqGRL3g,0.826,0.644
+41,פלואו שנות אור,Ori Shochat,0wj0xEdzYYqTSfEVoUTuER,https://api.spotify.com/v1/tracks/0wj0xEdzYYqTSfEVoUTuER,0.645,0.595
+42,A Pillow of Winds,Pink Floyd,7krbQbYq63hcwVMNW1R0tD,https://api.spotify.com/v1/tracks/7krbQbYq63hcwVMNW1R0tD,0.211,0.222
+43,הריקוד המוזר של הלב,Rona Kenan,7ioULcaNvp5UUVVMjLHJ6I,https://api.spotify.com/v1/tracks/7ioULcaNvp5UUVVMjLHJ6I,0.565,0.585
+44,אין סופי,Shotei Hanevuah,08ycOJXImdtK3KiO5BshhJ,https://api.spotify.com/v1/tracks/08ycOJXImdtK3KiO5BshhJ,0.738,0.116
+45,נמאס מבולשיט,אופק אדנק,0klropjAsnSZHOIZ5NRa4W,https://api.spotify.com/v1/tracks/0klropjAsnSZHOIZ5NRa4W,0.456,0.772
+46,Songbird - 2004 Remaster,Fleetwood Mac,2JoUtztTqCN4ZhmbRDGPIL,https://api.spotify.com/v1/tracks/2JoUtztTqCN4ZhmbRDGPIL,0.0842,0.388
+47,כל הדברים היפים באמת,Daniela Spector,4BK0g4lnXyeYYlYgosqYtQ,https://api.spotify.com/v1/tracks/4BK0g4lnXyeYYlYgosqYtQ,0.219,0.222
+48,בדרך הביתה,Rona Kenan,6s7BSulGOKRJJi4oILzcce,https://api.spotify.com/v1/tracks/6s7BSulGOKRJJi4oILzcce,0.298,0.173
+49,בימים,Leyli,2fo2m2eVrGO47M6qCh7eQi,https://api.spotify.com/v1/tracks/2fo2m2eVrGO47M6qCh7eQi,0.381,0.189
