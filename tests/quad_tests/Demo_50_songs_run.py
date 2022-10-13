@@ -66,10 +66,12 @@ def draw_quad(quad: Quadtree, songs_list: list[Song], annotate: bool = False, sh
     x_list = [SONG.mood_vec.energy for SONG in songs_list]
     y_list = [SONG.mood_vec.valence for SONG in songs_list]
 
-    dpi = 300
-    width, height = 600, 600
+    dpi = 600
+    width, height = 1000, 1000
 
     plt.axis([0, 1, 0, 1])
+    plt.xticks(np.arange(0, 1.125, step=0.125))
+    plt.yticks(np.arange(0, 1.125, step=0.125))
     quad.draw(ax=ax)
 
     ax.scatter(x_list, y_list, s=3)
@@ -82,15 +84,22 @@ def draw_quad(quad: Quadtree, songs_list: list[Song], annotate: bool = False, sh
         plt.show()
 
 
-def add_search_points_to_drawing(rand_point: Point, closest_point: Point):
+def add_search_points_to_drawing(rand_point: Point, closest_point: Point, candidates: list[Point]):
     points_line2d = []
-    if rand_point is not None:
+
+    if rand_point:
         points_line2d.extend(plt.plot([rand_point.x], [rand_point.y],
                                       c='tab:red', marker='o'))
 
-    if closest_point is not None:
+    if closest_point:
         points_line2d.extend(plt.plot([closest_point.x], [closest_point.y],
                                       c="tab:green", marker="*"))
+
+    if len(candidates) > 0:
+        for candidate in candidates:
+            if closest_point != candidate.data.position:
+                points_line2d.extend(plt.plot([candidate.data.position.x], [candidate.data.position.y],
+                                              c="tab:purple", marker="$?$"))
 
     return points_line2d
 
@@ -138,12 +147,13 @@ def test_points(points=None, save_graphs: bool = True):
         test_point = Point(x=point[0], y=point[1]) if not isinstance(point, Point) else point
 
         start_time = time.perf_counter()
-        closest_nodedata = quadtree.find_nearest_nodedata(point=test_point)
+        closest_nodedata, candidates = quadtree.find_nearest_nodedata(point=test_point, with_candidates=True)
+
         end_time = time.perf_counter()
 
         total_search_time += (end_time - start_time)
 
-        points_added = add_search_points_to_drawing(rand_point=test_point, closest_point=closest_nodedata.position)
+        points_added = add_search_points_to_drawing(rand_point=test_point, closest_point=closest_nodedata.position, candidates=candidates)
 
         if save_graphs:
             plt.savefig(fname=f"{test_path}/{i}.png")

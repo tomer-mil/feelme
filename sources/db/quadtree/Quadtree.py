@@ -31,9 +31,17 @@ class Direction:
     def opposite_of(direction: int | str, relative_to: str = None):
         if isinstance(direction, int):
             assert isinstance(relative_to, str)
-            is_horizontal = relative_to in {"N", "S"}
-            if is_horizontal:
+
+            if relative_to in {"N", "S"}:
                 return 3 - direction
+
+            if relative_to == "center":
+                match direction:
+                    case Direction.NW: return Direction.SE
+                    case Direction.NE: return Direction.SW
+                    case Direction.SE: return Direction.NW
+                    case Direction.SW: return Direction.NE
+
             match direction:
                 case Direction.NW: return Direction.NE
                 case Direction.NE: return Direction.NW
@@ -48,19 +56,43 @@ class Direction:
 
 
     @staticmethod
-    def split_direction(direction: str) -> tuple:
-        assert isinstance(direction, str)
-        assert direction in {"N", "S", "W", "E"}
+    def split_direction(direction: str | int) -> tuple:
+        if isinstance(direction, str):
+            assert direction in {"N", "S", "W", "E"}
+
+            match direction:
+                case "N": return Direction.NW, Direction.NE
+                case "S": return Direction.SW, Direction.SE
+                case "W": return Direction.NW, Direction.SW
+                case "E": return Direction.NE, Direction.SE
 
         match direction:
-            case "N":
-                return Direction.NW, Direction.NE
-            case "S":
-                return Direction.SW, Direction.SE
-            case "W":
-                return Direction.NW, Direction.SW
-            case "E":
-                return Direction.NE, Direction.SE
+            case Direction.NW: return "N", "W"
+            case Direction.NE: return "N", "E"
+            case Direction.SE: return "S", "E"
+            case Direction.SW: return "S", "W"
+
+
+    @staticmethod
+    def concatenate_directions(dir1: str, dir2: str) -> int:
+        assert isinstance(dir1, str)
+        assert isinstance(dir2, str)
+
+        if dir1 == Direction.opposite_of(direction=dir2):
+            raise Exception("Opposite Directions")
+
+        concatenated_direction = dir1 + dir2 if dir1 in {"N", "S"} else dir2 + dir1
+
+        match concatenated_direction:
+            case "NW": return Direction.NW
+            case "NE": return Direction.NE
+            case "SE": return Direction.SE
+            case "SW": return Direction.SW
+
+    @staticmethod
+    def is_vertical(direction: str) -> bool:
+        return direction in {"N", "S"}
+
 
 class Point:
     """
@@ -76,6 +108,9 @@ class Point:
 
     def __str__(self):
         return f"({self.x}, {self.y})"
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
 
     def __deepcopy__(self, memo):
         cls = self.__class__
@@ -93,6 +128,33 @@ class Point:
 
         return distance(self.x - other_x, self.y - other_y)
 
+    def nudge(self, direction: int | str):
+        EPSILON = 0.001
+        if isinstance(direction, int):
+            match direction:
+                case Direction.NW:
+                    self.x -= EPSILON
+                    self.y += EPSILON
+                case Direction.NE:
+                    self.x += EPSILON
+                    self.y += EPSILON
+                case Direction.SE:
+                    self.x += EPSILON
+                    self.y -= EPSILON
+                case Direction.SW:
+                    self.x -= EPSILON
+                    self.y -= EPSILON
+        else:
+            match direction:
+                case "N":
+                    self.y += EPSILON
+                case "S":
+                    self.y -= EPSILON
+                case "W":
+                    self.x -= EPSILON
+                case "E":
+                    self.x += EPSILON
+
 
 class Frame:
     """
@@ -105,11 +167,15 @@ class Frame:
 
     def __init__(self, top_left: Point = Point(x=0.0, y=1.0),
                  bottom_right: Point = Point(x=1.0, y=0.0)):
+
         self.top_left = top_left
         self.bottom_right = bottom_right
 
+        # Debug method
+        self.color = ""
+
     def __repr__(self):
-        return f"TL: {str(self.top_left)}, BR: {str(self.bottom_right)}"
+        return f"TL: {str(self.top_left)}, BR: {str(self.bottom_right)}, Color: {self.color}"
 
     def __str__(self):
         return self.__repr__()
@@ -176,15 +242,40 @@ class Frame:
 
         return Frame(top_left=top_left, bottom_right=bottom_right)
 
-    def draw(self, ax, c='k', lw=1, **kwargs):
+    def get_top_right(self) -> Point:
+        return Point(x=self.bottom_right.x, y=self.top_left.y)
+
+    def get_bottom_left(self) -> Point:
+        return Point(x=self.top_left.x, y=self.bottom_right.y)
+
+    def get_corners(self) -> list[Point]:
+        return [self.top_left, self.get_top_right(), self.bottom_right, self.get_bottom_left()]
+
+    @staticmethod
+    def convert_color_to_text(hex_color: str):
+        match hex_color:
+            case "#1f77b4": return "blue"
+            case "#ff7f0e": return "orange"
+            case "#2ca02c": return "green"
+            case "#d62728": return "red"
+            case "#9467bd": return "purple"
+            case "#8c564b": return "brown"
+            case "#e377c2": return "pink"
+            case "#7f7f7f": return "grey"
+            case "#bcbd22": return "yellow"
+            case "#17becf": return "cyan"
+
+    def draw(self, ax):
         top_left = Point(x=self.top_left.x, y=self.top_left.y)
         bottom_left = Point(x=self.top_left.x, y=self.bottom_right.y)
 
         bottom_right = Point(x=self.bottom_right.x, y=self.bottom_right.y)
         top_right = Point(x=self.bottom_right.x, y=self.top_left.y)
 
-        ax.plot([top_left.x, top_right.x, bottom_right.x, bottom_left.x, top_left.x],
-                [top_left.y, top_right.y, bottom_right.y, bottom_left.y, top_left.y])
+        p = ax.plot([top_left.x, top_right.x, bottom_right.x, bottom_left.x, top_left.x],
+                    [top_left.y, top_right.y, bottom_right.y, bottom_left.y, top_left.y])
+
+        self.color = Frame.convert_color_to_text(hex_color=p[-1].get_color())
 
 
 class NodeData:
@@ -353,8 +444,14 @@ class Node:
                 neighbors_directions.append(direction)
         #  }
         neighbors = []
+        greater_neighbors = []
+
         for direction in neighbors_directions:
-            neighbors.extend(self.find_neighbors_in_direction(direction=direction))
+            greater_neighbor = self.get_neighbor_of_greater_or_equal_size(direction=direction)
+            greater_neighbors.append((direction, greater_neighbor)) if greater_neighbor is not None else None
+            neighbors.extend(self.find_neighbors_of_smaller_size(neighbor=greater_neighbor, direction=direction))
+
+        neighbors.extend(self.find_diagonal_neighbors(greater_neighbors=greater_neighbors))
 
         return neighbors
 
@@ -367,6 +464,18 @@ class Node:
             if child is not None:
                 child_and_directions_list.append((child_direction, child.frame.find_frame_relative_direction(point=point)))
         return child_and_directions_list
+
+    def is_corner(self, direction: int, neighbor1: tuple, neighbor2: tuple) -> bool:
+        neighbor1_corners, neighbor2_corners = neighbor1[1].frame.get_corners(), neighbor2[1].frame.get_corners()
+
+        neighbor1_corner = neighbor1_corners[Direction.opposite_of(direction=direction, relative_to=neighbor1[0])]
+        neighbor2_corner = neighbor2_corners[Direction.opposite_of(direction=direction, relative_to=neighbor2[0])]
+
+        return self.frame.get_corners()[direction] == neighbor1_corner == neighbor2_corner
+
+
+
+
 
     def find_candidates(self) -> list:
         children_directions = self.get_relative_direction_of_children_to_point(point=self.external_point)
@@ -396,39 +505,52 @@ class Node:
         if node is None or node.is_leaf():
             return node
 
-        if self.parent.children[Direction.opposite_of(direction=mirrored_directions[1], relative_to=direction)] == self:
-            if node.children[mirrored_directions[1]] is None and node.data is not None:
-                dummy_node = node.add_child(direction=mirrored_directions[1], is_dummy=True)
-                dummy_node.data = deepcopy(self.data)
-                return dummy_node
-            return node.children[mirrored_directions[1]]
+        if self.parent.children[Direction.opposite_of(direction=mirrored_directions[0], relative_to=direction)] == self:
+            if node.data is not None:
+                if node.frame.find_location_in_frame(point=node.data.position) == mirrored_directions[0]:
+                    dummy_node = node.add_child(direction=mirrored_directions[0], is_dummy=True)
+                    dummy_node.data = deepcopy(node.data)
+                    return dummy_node
+            return node.children[mirrored_directions[0]]
 
-        if node.children[mirrored_directions[1]] is None and node.data is not None:
-            dummy_node = node.add_child(direction=mirrored_directions[1], is_dummy=True)
-            dummy_node.data = deepcopy(self.data)
-            return dummy_node
+        if self.parent.children[Direction.opposite_of(direction=mirrored_directions[1], relative_to=direction)] == self:
+            if node.data is not None:
+                if node.frame.find_location_in_frame(point=node.data.position) == mirrored_directions[1]:
+                    dummy_node = node.add_child(direction=mirrored_directions[1], is_dummy=True)
+                    dummy_node.data = deepcopy(node.data)
+                    return dummy_node
+            return node.children[mirrored_directions[1]]
+        #
+        # if node.children[mirrored_directions[1]] is None and node.data is not None:
+        #     dummy_node = node.add_child(direction=mirrored_directions[1], is_dummy=True)
+        #     dummy_node.data = deepcopy(self.data)
+        #     return dummy_node
 
         return node.children[mirrored_directions[0]]
 
     def find_neighbors_of_smaller_size(self, neighbor, direction: str) -> list:
         candidates = [] if neighbor is None else [neighbor]
         neighbors = []
+        counter_direction = Direction.opposite_of(direction=direction)  # CHANGES IN CASE OF DIAGONAL, TO SPLIT_DIRECTION
 
         while len(candidates) > 0:
             if candidates[0] is not None:
-                if candidates[0].data is not None:
+
+                if candidates[0].is_leaf():
+                    neighbors.append(candidates[0])
+
+                elif candidates[0].data is not None:
                     data_direction = candidates[0].frame.find_location_in_frame(point=candidates[0].data.position)
-                    if data_direction in Direction.neighboring[direction]:
+                    if data_direction in Direction.neighboring[direction]:  # CHANGES IN CASE OF DIAGONAL
                         neighbors.append(candidates[0])
 
-                if not candidates[0].is_leaf():
-                    counter_direction = Direction.opposite_of(direction=direction)
-                    if not candidates[0].has_children_in_direction(direction=counter_direction):
-                        candidates.append(candidates[0].children[Direction.neighboring[counter_direction][0]])
-                        candidates.append(candidates[0].children[Direction.neighboring[counter_direction][1]])
-                    else:
-                        candidates.append(candidates[0].children[Direction.neighboring[direction][0]])
-                        candidates.append(candidates[0].children[Direction.neighboring[direction][1]])
+                if ((not candidates[0].has_children_in_direction(direction=counter_direction))
+                        and not candidates[0].has_data_in_direction(direction=counter_direction)):
+                    candidates.append(candidates[0].children[Direction.neighboring[counter_direction][0]])
+                    candidates.append(candidates[0].children[Direction.neighboring[counter_direction][1]])
+                else:
+                    candidates.append(candidates[0].children[Direction.neighboring[direction][0]])
+                    candidates.append(candidates[0].children[Direction.neighboring[direction][1]])
 
             candidates.remove(candidates[0])
 
@@ -437,6 +559,65 @@ class Node:
     def find_neighbors_in_direction(self, direction: str) -> list:
         neighbor = self.get_neighbor_of_greater_or_equal_size(direction=direction)
         return self.find_neighbors_of_smaller_size(neighbor=neighbor, direction=direction)
+
+    def find_diagonal_neighbors(self, greater_neighbors: list[tuple]):
+        vertical_neighbors = []
+        horizontal_neighbors = []
+        for neighbor in greater_neighbors:
+            if Direction.is_vertical(direction=neighbor[0]):
+                vertical_neighbors.append(neighbor)
+            else:
+                horizontal_neighbors.append(neighbor)
+
+        diagonal_neighbors = []
+
+        if len(vertical_neighbors) > 0 and len(horizontal_neighbors) > 0:
+            for v_neighbor in vertical_neighbors:
+                for h_neighbor in horizontal_neighbors:
+
+                    diagonal_direction = Direction.concatenate_directions(dir1=h_neighbor[0], dir2=v_neighbor[0])
+
+                    if (self == self.parent.children[Direction.opposite_of(direction=diagonal_direction, relative_to="center")]
+                            and self.parent.children[diagonal_direction]):
+
+                        diagonal_neighbors.extend(self.parent.children[diagonal_direction].
+                                                  find_diagonal_descendants(
+                            direction=Direction.opposite_of(direction=diagonal_direction, relative_to="center")))
+
+                    if self.is_corner(direction=diagonal_direction, neighbor1=v_neighbor, neighbor2=h_neighbor):
+                        if v_neighbor[1].depth >= h_neighbor[1].depth:
+                            diagonal_greater_neighbor = v_neighbor[1].get_neighbor_of_greater_or_equal_size(
+                                direction=h_neighbor[0])
+                        else:
+                            diagonal_greater_neighbor = h_neighbor[1].get_neighbor_of_greater_or_equal_size(
+                                direction=v_neighbor[0])
+
+                        diagonal_neighbors.extend(diagonal_greater_neighbor.find_diagonal_descendants(
+                            direction=Direction.opposite_of(direction=diagonal_direction, relative_to="center")))
+
+        return diagonal_neighbors
+
+    def find_diagonal_descendants(self, direction: int) -> list:
+        corner_point = deepcopy(self.frame.get_corners()[direction])
+        corner_point.nudge(direction=Direction.opposite_of(direction=direction, relative_to="center"))
+
+        corner_node = self.find_containing_node(point=corner_point)
+
+        if corner_node.is_leaf() or corner_node.has_data_in_direction(direction=direction):
+            return [corner_node]
+
+        dummy_node = corner_node.add_child(direction=direction, is_dummy=True)
+        split_direction = Direction.split_direction(direction=direction)
+
+        corner_nodes = []
+
+        for s_direction in split_direction:
+            counter_direction = Direction.opposite_of(direction=direction, relative_to=s_direction)
+            if corner_node.children[counter_direction] is not None:
+                corner_nodes.extend(dummy_node.find_neighbors_of_smaller_size(
+                    neighbor=corner_node.children[counter_direction], direction=s_direction))
+
+        return corner_nodes
 
     def has_children_in_direction(self, direction: str | int) -> bool:
         if isinstance(direction, int):
@@ -447,11 +628,23 @@ class Node:
         return (self.children[split_direction[0]] is not None or
                 self.children[split_direction[1]] is not None)
 
+    def has_data_in_direction(self, direction: str | int) -> bool:
+        if self.data:
+            data_location = self.frame.find_location_in_frame(point=self.data.position)
+
+            if isinstance(direction, int):
+                return data_location == direction
+
+            split_direction = Direction.split_direction(direction=data_location)
+            return direction == split_direction[0] or direction == split_direction[1]
+
+        return False
+
     def find_relevant_descendants(self, children_directions: list[tuple]):
         descendants = set()
         for i, directions in children_directions:
             for direction in directions:
-                descendants.update(self.find_neighbors_of_smaller_size(direction=direction, neighbor=self))
+                descendants.update(self.find_neighbors_of_smaller_size(direction=Direction.opposite_of(direction=direction), neighbor=self))
             # if self.children[i].data is not None:
             #     descendants.add(self.children[i])
         return list(descendants)
@@ -459,11 +652,11 @@ class Node:
     def draw(self, ax):
         """Draw a representation of the quadtree on Matplotlib Axes ax."""
 
-        self.frame.draw(ax)
+        self.frame.draw(ax=ax)
         if self.is_divided:
             for child in self.children:
                 if child is not None:
-                    child.draw(ax)
+                    child.draw(ax=ax)
 
 
 class Quadtree:
@@ -493,9 +686,8 @@ class Quadtree:
 
         pass
 
-    def find_nearest_nodedata(self, point: Point) -> NodeData:
-        containing_node = self.find_containing_node(point=point)
-        candidate_nodes = containing_node.find_candidates()
+    def find_nearest_nodedata(self, point: Point, with_candidates: bool = False) -> NodeData:
+        candidate_nodes = self.get_candidate_nodes(point=point)
 
         # print(f"Number of candidates: {len(candidate_nodes)}")
         # print(*candidate_nodes, sep="\n")
@@ -505,7 +697,11 @@ class Quadtree:
             curr_distance = point.distance_to(other=node.data.position)
             min_distance = (node, curr_distance) if curr_distance < min_distance[1] else min_distance
 
-        return min_distance[0].data
+        return min_distance[0].data if not with_candidates else (min_distance[0].data, candidate_nodes)
+
+    def get_candidate_nodes(self, point: Point):
+        containing_node = self.find_containing_node(point=point)
+        return containing_node.find_candidates()
 
     def draw(self, ax):
         self.root.draw(ax=ax)
