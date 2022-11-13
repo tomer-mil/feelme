@@ -1,11 +1,9 @@
 from items.Gif import Gif
 from items.MoodItem import MoodItem
-from api_managers.Giphy_API_Manager import get_gif_data_from_giphy
+from sources.giphy.Giphy_API_Manager import get_gif_data_from_giphy
 from search_engine.QueryData import QueryData
 from search_engine.analyzers.MoodVec_Analyzer import calc_query_mood_vec
 from items.Song import Song
-
-from servers.User_Server import spotify
 
 
 ##########################
@@ -23,7 +21,8 @@ def search_song(text: str, sentiments: str):
     :return: Song object with the suggested song from db
     """
     text_mood_vec = calc_query_mood_vec(text=text, sentiments=sentiments)
-    # search_song_by_mood(mood_vec=text_mood_vec)  # TODO
+
+    # song = search_song_by_mood(mood_v=text_mood_vec)  # TODO
     return text_mood_vec
 
 
@@ -69,5 +68,9 @@ def search(query: str) -> MoodItem:
 
     gif = search_gif(keywords=query_data.data["keywords"])
     song = search_song(text=query_data.data["text"], sentiments=query_data.data["sentiments"])
+    example_song = Song(artist="artist", title="title", mood_vec=song)
+    return MoodItem(song=example_song, gif=gif)
 
-    return MoodItem(song=Song(title="test", artist="test"), gif=gif)
+
+result = search(query="I got up really early. I wanted to go surf. It was difficult getting myself out of bed, and out of the house. I haven't had much sleep the last past nights but as soon as I saw the sea I was filled with joy and energy that helped me through my day")
+print(result.song.mood_vec)

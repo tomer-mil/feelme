@@ -1,7 +1,7 @@
 import tekore as tk
 from dotenv import load_dotenv
 import os
-from Utils import ENV_PATH
+from configs.Utils import ENV_PATH
 
 load_dotenv()
 CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
@@ -15,14 +15,6 @@ def authorize() -> (tk.Spotify, tk.Credentials):
     This access token is then stored in the credentials file for later use.
 
     :return: A spotify object and a credentials object
-    :doc-author: Trelent
-    """
-    """
-    The authorize function is used to create a Spotify object and Credentials object.
-    The Credentials object is then used to authorize the user, which returns an access token.
-    This access token is then stored in the Spotify object as its client_creds attribute.
-    
-    :return: A tuple of authorized Spotify object and a credentials object.
     """
     conf = tk.config_from_file(ENV_PATH, "SPOTIFY")  # Get required configuration from .env file
     cred = tk.Credentials(*conf)  # Client with configuration used to authorize a user

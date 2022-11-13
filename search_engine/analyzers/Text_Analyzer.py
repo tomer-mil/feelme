@@ -6,7 +6,7 @@ from configs.Utils import clean_word
 # CONSTANTS #
 #############
 
-LEX_CSV_PATH = "./lexicons/en/NRC-VAD-Lexicon_csv.csv"
+LEX_CSV_PATH = "/Users/tomermildworth/Desktop/Coding/FeelMe/feelme/lexicons/en/NRC-VAD-Lexicon_csv.csv"
 DEFAULT_LANGUAGE = "en"
 
 ###########

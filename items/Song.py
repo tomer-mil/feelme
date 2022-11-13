@@ -1,15 +1,15 @@
+from copy import deepcopy
 from items.MoodVec import MoodVec
 
 
 class Song:
 
     # Class Attributes
-    spotify_ID: str
-    href: str
     title: str
     artist: str
-    energy: int
-    valence: int
+    mood_vec: MoodVec
+    spotify_ID: str
+    href: str
 
     def __init__(self,
                  title: str,
@@ -18,14 +18,22 @@ class Song:
                  href: str = None,
                  mood_vec: MoodVec = None):
 
-        self.spotify_ID = spotify_ID
-        self.href = href
         self.title = title
         self.artist = artist
         self.mood_vec = mood_vec
+        self.spotify_ID = spotify_ID
+        self.href = href
 
     def __repr__(self):
         return f"<title: {self.title}, by: {self.artist} | ID: {self.spotify_ID}>"
+
+    def __deepcopy__(self, memo):
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        for k, v in self.__dict__.items():
+            setattr(result, k, deepcopy(v, memo))
+        return result
 
     def get_title(self):
         return self.title
